@@ -1,21 +1,19 @@
-package com.example.project.service;
+package com.example.yourproject.service;
 
-import com.example.project.repository.MatchingRepository;
+import com.example.yourproject.domain.Matching;
+import com.example.yourproject.repository.MatchingRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MatchingService {
 
     private final MatchingRepository matchingRepository;
 
-    public MatchingService(MatchingRepository matchingRepository) {
-        this.matchingRepository = matchingRepository;
-    }
-
-    public void deleteMatchingById(Long id) {
-        if (!matchingRepository.existsById(id)) {
-            throw new IllegalArgumentException("해당 매칭이 존재하지 않습니다.");
-        }
-        matchingRepository.deleteById(id);
+    public void deleteMatchById(Long matchId) {
+        Matching match = matchingRepository.findById(matchId)
+                .orElseThrow(() -> new ResourceNotFoundException("해당 매칭을 찾을 수 없습니다."));
+        matchingRepository.delete(match);
     }
 }

@@ -1,22 +1,22 @@
-package com.example.project.controller;
+package com.example.yourproject.controller;
 
-import com.example.project.service.MatchingService;
+import com.example.yourproject.service.MatchingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/matchings")
+@RequestMapping("/api/matches")
+@RequiredArgsConstructor
 public class MatchingAdminController {
 
     private final MatchingService matchingService;
 
-    public MatchingAdminController(MatchingService matchingService) {
-        this.matchingService = matchingService;
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteMatching(@PathVariable Long id) {
-        matchingService.deleteMatchingById(id);
-        return ResponseEntity.noContent().build(); // 204 No Content 응답
+    @DeleteMapping("/{matchId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteMatch(@PathVariable Long matchId) {
+        matchingService.deleteMatchById(matchId);
+        return ResponseEntity.noContent().build();  // 204 No Content
     }
 }
